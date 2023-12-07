@@ -5,7 +5,7 @@ This repository contains the source code, notebooks, and additional materials re
 
 ## Description
 
-In this assignment, Analysis is being done on Netflix users' data To gain a comprehensive understanding of user behavior within the platform, the strategy involves the application of hashing and clustering techniques. Hashing, a one-way transformation process, is utilized to protect sensitive user data or generate unique identifiers without compromising privacy. Meanwhile, clustering techniques such as k-means are employed to group users with similar behavioral patterns. By hashing user identifiers and clustering based on behavior, the platform can extract relevant information and highlights from user interactions. This approach allows for the analysis of usage patterns, identification of popular features, and understanding of specific user segments.
+In this assignment, Analysis is being done on Netflix users' data to gain a comprehensive understanding of user behavior within the platform, the strategy involves the application of hashing and clustering techniques. Hashing, a one-way transformation process, is utilized to protect sensitive user data or generate unique identifiers without compromising privacy. Meanwhile, clustering techniques such as k-means are employed to group users with similar behavioral patterns. By hashing user identifiers and clustering based on behavior, the platform can extract relevant information and highlights from user interactions. This approach allows for the analysis of usage patterns, identification of popular features, and understanding of specific user segments.
 
 ### <img src="/images/target.png" width="150" height="150" align="right" />
 
