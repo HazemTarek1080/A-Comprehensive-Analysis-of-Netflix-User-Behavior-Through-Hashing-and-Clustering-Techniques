@@ -5,6 +5,7 @@ Embark on a project to enhance Netflix's understanding of user preferences and r
 
 ### Co-authors
 
+### <img src="/images/robot.png" width="150" height="150" />
 | Student                |
 |------------------------|
 | student1               |
