@@ -65,5 +65,5 @@ You can find the dataset used in this [link](https://www.kaggle.com/datasets/vod
 - Hazem Aboulfotouh (aboulfotouh.2105193@studenti.uniroma1.it)
 - Marina Zanoni (zanoni.1964213@studenti.uniroma1.it)
 - Camilla cognome (Sapienza email)
-- Ortal cognome (Sapienza email)
+- Ortal Hadad (ortal2824@gmail.com)
 
