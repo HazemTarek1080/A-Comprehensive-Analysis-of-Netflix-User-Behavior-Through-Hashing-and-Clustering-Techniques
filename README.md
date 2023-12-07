@@ -5,8 +5,8 @@ Embark on a project to enhance Netflix's understanding of user preferences and r
 
 ### Co-authors
 
-| Student
-|-------------------------------------------------------|
+| Student                |
+|------------------------|
 | student1               |
 | student2               |
 | student3               |
