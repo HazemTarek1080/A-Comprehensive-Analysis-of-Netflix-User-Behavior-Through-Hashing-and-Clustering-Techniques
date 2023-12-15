@@ -18,7 +18,7 @@ The goal is to carry out the following tasks:
 - **Grouping Users (Clustering)**:
 
   - Feature engineering using user clicks data, creating features such as favorite genre, average click duration, time of day engagement, movie preference era, and     average daily time spent.
-  - Consideration of normalization for scaling features and application of dimensionality reduction using Principal Component Analysis (PCA).
+  - Consideration of normalization for scaling features and application of dimensionality reduction using Multi Factor Analysis Decomposition (MFAD).
   - Implementation of K-means clustering algorithm from scratch in MapReduce, determining optimal clusters, and comparing with K-means++ results.
   - Characterization of clusters through pivot tables and analysis of relevant variables.
   
