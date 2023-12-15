@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import random
+
 
 def min_hash_signatures(matrix, perms, num_buckets):
     """
@@ -161,3 +163,74 @@ def recommend_movies(user_A_movies, user_B_movies):
     recommend_movies = list(recommended_movies_df["title"])
 
     return recommend_movies
+
+
+def extract_starting_centroids(rdd, k):
+    #returns k samples extracted from our dataset(in rdd form) without replacement
+    return rdd.takeSample(False, k)
+
+def euclidean_squared_distance(x, y): #Computes the square of the euclidean distance between two points 
+    x = np.array(x, dtype=np.float64)
+    y = np.array(y, dtype=np.float64)
+    return (np.linalg.norm(x-y))**2
+
+# Function used to check the convergence of the Kmeans algorithm: checks if the centroids of two following iterations are the same 
+checkconvergencefun = lambda l1, l2: sum(sum([el1 - el2 for (el1, el2) in zip(l1, l2)]))
+
+def Kmeans(rdd_data, centroids, k, it):
+    niter = it
+    # MAP PHASE: assign to each point a key-value pair -> key: the label of the cluster it's assigned to; value: (point, 1) 
+    rddmap = rdd_data.map(lambda point:(np.argmin([ euclidean_squared_distance(point, centroid) for centroid in centroids ]), (point, 1)))
+
+    # REDUCE PHASE: for each key(cluster) we get (sum_{point in the cluster}, #{points in the clusters})
+    rddreduce = rddmap.reduceByKey(lambda t1, t2: (np.add(t1[0], t2[0]), t1[1] + t2[1]) )
+
+    # COMPUTE THE NEW CENTROIDS: new centroid = mean of the points in each cluster = sum_{point in the cluster}/#{points in the clusters} => for each point, 
+    new_centroids = rddreduce.mapValues(lambda t: t[0]/t[1]).map(lambda t: t[1])
+    new_centr_list = new_centroids.collect()
+
+    # CHECKING CONVERGENCE 
+    if checkconvergencefun([np.array(centroid) for centroid in centroids], new_centr_list) == 0:
+        # Compute the clusters
+        clusters = rddmap.groupByKey().sortByKey().mapValues(lambda iterable: [t[0] for t in list(iterable)]).collect()
+        # List of keys corresponding to the cluster each point its assigned to (ordered by appearence of the points in the dataset)
+        clusters_idx  = rddmap.map(lambda t: t[0]).collect()
+        return clusters, clusters_idx, new_centr_list, niter
+    else:
+        # Update the number of iterations
+        niter += 1
+        # Iterative call 
+        return Kmeans(rdd_data, new_centr_list, k, niter)
+
+def get_centroids_Kmeans_pp(data, k):
+    n = len(data)
+    data = data.values
+    
+    # Initialize the list of centroids indeces by choosing the first one uniformly at random and saving it 
+    centroids_indeces = [random.randint(0, n)]
+    centroids = [np.array(data[centroids_indeces[-1], :])]
+
+    # Compute the remaining k-1 centroids
+    for _ in range(1, k):
+        # Initialize list with squared distances from the nearest centeroids
+        distances_nc = []
+
+        for point in data:
+
+            # Find the nearest centroid between the ones already computed and save its distance from the point 
+            # (we can directly use the squared distance beacause is an increasing function in [0, +\infty) => we "save" computational cost])
+            distances = np.array([euclidean_squared_distance(point, centroid) for centroid in centroids]).flatten()#compute sistances between point - centroids
+            distances_nc.append(np.min(distances, axis =0)) #save the smallest distance
+
+        # Choose the new centroid wrt their distance from the nearest centroid between the ones already computed
+        centroids.append(random.choices(data, weights=distances_nc, k=1)[0])
+        
+    return centroids        
+       
+
+def kmeans_plusplus(datardd, datapddf, k):
+    # Initialize the centroids for the first iteration
+    centroids_pp = get_centroids_Kmeans_pp(datapddf, k)
+
+    # Use the previous clustering (k-Means) algorithm to compute the clusters
+    return Kmeans(datardd, centroids_pp, k, 0)
